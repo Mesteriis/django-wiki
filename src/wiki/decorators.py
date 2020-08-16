@@ -16,10 +16,7 @@ from wiki.core.exceptions import NoRootURL
 def response_forbidden(request, article, urlpath, read_denied=False):
     if request.user.is_anonymous:
         qs = request.META.get("QUERY_STRING", "")
-        if qs:
-            qs = urlquote("?" + qs)
-        else:
-            qs = ""
+        qs = urlquote("?" + qs) if qs else ""
         return redirect(settings.LOGIN_URL + "?next=" + request.path + qs)
     else:
         return HttpResponseForbidden(

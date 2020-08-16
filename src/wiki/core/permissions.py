@@ -24,40 +24,49 @@ def can_read(article, user):
             return False
 
         # Check access for other users...
-        if user.is_anonymous and not settings.ANONYMOUS:
+        if (
+            user.is_anonymous
+            and not settings.ANONYMOUS
+            or not article.other_read
+            and user.is_anonymous
+        ):
             return False
         elif article.other_read:
             return True
-        elif user.is_anonymous:
-            return False
         if user == article.owner:
             return True
-        if article.group_read:
-            if article.group and user.groups.filter(id=article.group.id).exists():
-                return True
-        if article.can_moderate(user):
+        if (
+            article.group_read
+            and article.group
+            and user.groups.filter(id=article.group.id).exists()
+        ):
             return True
-        return False
+        return bool(article.can_moderate(user))
 
 
 def can_write(article, user):
     if callable(settings.CAN_WRITE):
         return settings.CAN_WRITE(article, user)
     # Check access for other users...
-    if user.is_anonymous and not settings.ANONYMOUS_WRITE:
+    if (
+        user.is_anonymous
+        and not settings.ANONYMOUS_WRITE
+        or not article.other_write
+        and user.is_anonymous
+    ):
         return False
     elif article.other_write:
         return True
-    elif user.is_anonymous:
-        return False
     if user == article.owner:
         return True
-    if article.group_write:
-        if article.group and user and user.groups.filter(id=article.group.id).exists():
-            return True
-    if article.can_moderate(user):
+    if (
+        article.group_write
+        and article.group
+        and user
+        and user.groups.filter(id=article.group.id).exists()
+    ):
         return True
-    return False
+    return bool(article.can_moderate(user))
 
 
 def can_assign(article, user):

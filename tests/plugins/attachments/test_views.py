@@ -29,10 +29,9 @@ class AttachmentTests(
         filename = kwargs.get("filename", "test.txt")
         data = strData.encode("utf-8")
         filedata = BytesIO(data)
-        filestream = InMemoryUploadedFile(
+        return InMemoryUploadedFile(
             filedata, None, filename, "text", len(data), None
         )
-        return filestream
 
     def _create_test_attachment(self, path):
         url = reverse("wiki:attachments_index", kwargs={"path": path})

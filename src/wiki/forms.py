@@ -267,7 +267,7 @@ class EditForm(forms.Form, SpamProtectionMixin):
                 data = kwargs.get("data", None)
             if data:
                 self.presumed_revision = data.get("current_revision", None)
-                if not str(self.presumed_revision) == str(self.initial_revision.id):
+                if str(self.presumed_revision) != str(self.initial_revision.id):
                     newdata = {}
                     for k, v in data.items():
                         newdata[k] = v
@@ -305,7 +305,7 @@ class EditForm(forms.Form, SpamProtectionMixin):
         """
         if self.no_clean or self.preview:
             return self.cleaned_data
-        if not str(self.initial_revision.id) == str(self.presumed_revision):
+        if str(self.initial_revision.id) != str(self.presumed_revision):
             raise forms.ValidationError(
                 gettext(
                     "While you were editing, someone else changed the revision. Your contents have been automatically merged with the new contents. Please review the text below."

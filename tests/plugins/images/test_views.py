@@ -38,10 +38,9 @@ class ImageTests(RequireRootArticleMixin, ArticleWebTestUtils, DjangoClientTestB
         filename = kwargs.get("filename", "test.gif")
         data = base64.b64decode(str_base64)
         filedata = BytesIO(data)
-        filestream = InMemoryUploadedFile(
+        return InMemoryUploadedFile(
             filedata, None, filename, "image", len(data), None
         )
-        return filestream
 
     def _create_test_image(self, path):
         # Get the form index
