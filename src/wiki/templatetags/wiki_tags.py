@@ -187,10 +187,7 @@ def is_locked(model):
 def login_url(context):
     request = context["request"]
     qs = request.META.get("QUERY_STRING", "")
-    if qs:
-        qs = urlquote("?" + qs)
-    else:
-        qs = ""
+    qs = urlquote("?" + qs) if qs else ""
     return settings.LOGIN_URL + "?next=" + request.path + qs
 
 

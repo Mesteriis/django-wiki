@@ -49,10 +49,10 @@ class FindHeader:
             self.sure_header = True
         else:
             match = self.HEADER_RE.search(text, pos)
-            if not match:
-                self.start = len(text) + 1
-                self.pos = self.start
-                return
+        if not match:
+            self.start = len(text) + 1
+            self.pos = self.start
+            return
         self.pos = match.end() - 1
 
         # Get level and header text of the section

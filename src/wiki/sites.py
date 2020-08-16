@@ -106,7 +106,7 @@ class WikiSite:
         return self.get_urls(), "wiki", self.name
 
     def get_root_urls(self):
-        urlpatterns = [
+        return [
             re_path(r"^$", self.article_view, name="root", kwargs={"path": ""}),
             re_path(r"^create-root/$", self.root_view, name="root_create"),
             re_path(r"^missing-root/$", self.root_missing_view, name="root_missing"),
@@ -117,13 +117,11 @@ class WikiSite:
                 name="diff",
             ),
         ]
-        return urlpatterns
 
     def get_deleted_list_urls(self):
-        urlpatterns = [
+        return [
             re_path("^_admin/$", self.deleted_list_view, name="deleted_list"),
         ]
-        return urlpatterns
 
     def get_accounts_urls(self):
         if settings.ACCOUNT_HANDLING:
@@ -192,7 +190,7 @@ class WikiSite:
         ]
 
     def get_article_path_urls(self):
-        urlpatterns = [
+        return [
             # Paths decided by URLs
             re_path(
                 r"^(?P<path>.+/|)_create/$", self.article_create_view, name="create"
@@ -239,7 +237,6 @@ class WikiSite:
             # This should always go last!
             re_path(r"^(?P<path>.+/|)$", self.article_view, name="get"),
         ]
-        return urlpatterns
 
     def get_plugin_urls(self):
         urlpatterns = []

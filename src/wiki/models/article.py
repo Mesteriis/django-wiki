@@ -203,10 +203,7 @@ class Article(models.Model):
     def render(self, preview_content=None, user=None):
         if not self.current_revision:
             return ""
-        if preview_content:
-            content = preview_content
-        else:
-            content = self.current_revision.content
+        content = preview_content if preview_content else self.current_revision.content
         return mark_safe(
             article_markdown(
                 content, self, preview=preview_content is not None, user=user

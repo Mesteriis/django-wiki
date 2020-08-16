@@ -189,11 +189,12 @@ class URLPath(MPTTModel):
             )
         if not self.slug and self.parent:
             raise ValidationError(_("A non-root note must always have a slug."))
-        if not self.parent:
-            if URLPath.objects.root_nodes().filter(site=self.site).exclude(id=self.id):
-                raise ValidationError(
-                    _("There is already a root node on %s") % self.site
-                )
+        if not self.parent and URLPath.objects.root_nodes().filter(
+            site=self.site
+        ).exclude(id=self.id):
+            raise ValidationError(
+                _("There is already a root node on %s") % self.site
+            )
 
     @classmethod
     def get_by_path(cls, path, select_related=False):
@@ -214,21 +215,16 @@ class URLPath(MPTTModel):
             return cls.root()
 
         slugs = path.split("/")
-        level = 1
         parent = cls.root()
-        for slug in slugs:
+        for level, slug in enumerate(slugs, start=1):
             if settings.URL_CASE_SENSITIVE:
                 child = parent.get_children().select_related_common().get(slug=slug)
-                child.cached_ancestors = parent.cached_ancestors + [parent]
-                parent = child
             else:
                 child = (
                     parent.get_children().select_related_common().get(slug__iexact=slug)
                 )
-                child.cached_ancestors = parent.cached_ancestors + [parent]
-                parent = child
-            level += 1
-
+            child.cached_ancestors = parent.cached_ancestors + [parent]
+            parent = child
         return parent
 
     def get_absolute_url(self):

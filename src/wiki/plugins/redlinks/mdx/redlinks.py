@@ -43,10 +43,7 @@ class LinkTreeprocessor(Treeprocessor):
         except AttributeError:
             pass
         urlpaths = self.md.article.urlpath_set.all()
-        if urlpaths.exists():
-            self._my_urlpath = urlpaths[0]
-        else:
-            self._my_urlpath = None
+        self._my_urlpath = urlpaths[0] if urlpaths.exists() else None
         return self._my_urlpath
 
     def get_class(self, el):

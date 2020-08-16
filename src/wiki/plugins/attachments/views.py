@@ -166,20 +166,19 @@ class AttachmentReplaceView(ArticleMixin, FormView):
                 article_id=self.article.id,
             )
 
-        if self.can_moderate:
-            if form.cleaned_data["replace"]:
-                # form has no cleaned_data field unless self.can_moderate is True
-                try:
-                    most_recent_revision = self.attachment.attachmentrevision_set.exclude(
-                        id=attachment_revision.id,
-                        created__lte=attachment_revision.created,
-                    ).latest()
-                    most_recent_revision.delete()
-                except ObjectDoesNotExist:
-                    msg = "{attachment} does not contain any revisions.".format(
-                        attachment=str(self.attachment.original_filename)
-                    )
-                    messages.error(self.request, msg)
+        if self.can_moderate and form.cleaned_data["replace"]:
+            # form has no cleaned_data field unless self.can_moderate is True
+            try:
+                most_recent_revision = self.attachment.attachmentrevision_set.exclude(
+                    id=attachment_revision.id,
+                    created__lte=attachment_revision.created,
+                ).latest()
+                most_recent_revision.delete()
+            except ObjectDoesNotExist:
+                msg = "{attachment} does not contain any revisions.".format(
+                    attachment=str(self.attachment.original_filename)
+                )
+                messages.error(self.request, msg)
 
         return redirect(
             "wiki:attachments_index", path=self.urlpath.path, article_id=self.article.id

@@ -39,42 +39,36 @@ FIELDS_IN_CUSTOM_USER_MODEL = (
 
 
 def check_for_required_installed_apps(app_configs, **kwargs):
-    errors = []
-    for app in REQUIRED_INSTALLED_APPS:
-        if not apps.is_installed(app[0]):
-            errors.append(
-                Error("needs %s in INSTALLED_APPS" % app[1], id="wiki.%s" % app[2],)
-            )
-    return errors
+    return [
+        Error("needs %s in INSTALLED_APPS" % app[1], id="wiki.%s" % app[2],)
+        for app in REQUIRED_INSTALLED_APPS
+        if not apps.is_installed(app[0])
+    ]
 
 
 def check_for_obsolete_installed_apps(app_configs, **kwargs):
-    errors = []
-    for app in OBSOLETE_INSTALLED_APPS:
-        if apps.is_installed(app[0]):
-            errors.append(
-                Error(
-                    "You need to change from %s to %s in INSTALLED_APPS and your urlconfig."
-                    % (app[0], app[1]),
-                    id="wiki.%s" % app[2],
-                )
-            )
-    return errors
+    return [
+        Error(
+            "You need to change from %s to %s in INSTALLED_APPS and your urlconfig."
+            % (app[0], app[1]),
+            id="wiki.%s" % app[2],
+        )
+        for app in OBSOLETE_INSTALLED_APPS
+        if apps.is_installed(app[0])
+    ]
 
 
 def check_for_context_processors(app_configs, **kwargs):
-    errors = []
     context_processors = Engine.get_default().context_processors
-    for context_processor in REQUIRED_CONTEXT_PROCESSORS:
-        if context_processor[0] not in context_processors:
-            errors.append(
-                Error(
-                    "needs %s in TEMPLATE['OPTIONS']['context_processors']"
-                    % context_processor[0],
-                    id="wiki.%s" % context_processor[1],
-                )
-            )
-    return errors
+    return [
+        Error(
+            "needs %s in TEMPLATE['OPTIONS']['context_processors']"
+            % context_processor[0],
+            id="wiki.%s" % context_processor[1],
+        )
+        for context_processor in REQUIRED_CONTEXT_PROCESSORS
+        if context_processor[0] not in context_processors
+    ]
 
 
 def check_for_fields_in_custom_user_model(app_configs, **kwargs):

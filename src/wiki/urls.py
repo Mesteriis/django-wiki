@@ -62,7 +62,7 @@ class WikiURLPatterns:
         return urlpatterns
 
     def get_root_urls(self):
-        urlpatterns = [
+        return [
             re_path(
                 r"^$",
                 self.article_view_class.as_view(),
@@ -84,15 +84,15 @@ class WikiURLPatterns:
                 name="diff",
             ),
         ]
-        return urlpatterns
 
     def get_deleted_list_urls(self):
-        urlpatterns = [
+        return [
             re_path(
-                "^_admin/$", self.deleted_list_view_class.as_view(), name="deleted_list"
+                "^_admin/$",
+                self.deleted_list_view_class.as_view(),
+                name="deleted_list",
             ),
         ]
-        return urlpatterns
 
     def get_accounts_urls(self):
         if settings.ACCOUNT_HANDLING:
@@ -121,7 +121,7 @@ class WikiURLPatterns:
         return urlpatterns
 
     def get_revision_urls(self):
-        urlpatterns = [
+        return [
             # This one doesn't work because it don't know
             # where to redirect after...
             re_path(
@@ -140,10 +140,9 @@ class WikiURLPatterns:
                 name="merge_revision_preview",
             ),
         ]
-        return urlpatterns
 
     def get_article_urls(self):
-        urlpatterns = [
+        return [
             # Paths decided by article_ids
             re_path(
                 r"^(?P<article_id>[0-9]+)/$",
@@ -206,10 +205,9 @@ class WikiURLPatterns:
                 name="plugin",
             ),
         ]
-        return urlpatterns
 
     def get_article_path_urls(self):
-        urlpatterns = [
+        return [
             # Paths decided by URLs
             re_path(
                 r"^(?P<path>.+/|)_create/$",
@@ -282,9 +280,10 @@ class WikiURLPatterns:
                 name="plugin",
             ),
             # This should always go last!
-            re_path(r"^(?P<path>.+/|)$", self.article_view_class.as_view(), name="get"),
+            re_path(
+                r"^(?P<path>.+/|)$", self.article_view_class.as_view(), name="get"
+            ),
         ]
-        return urlpatterns
 
     @staticmethod
     def get_plugin_urls():

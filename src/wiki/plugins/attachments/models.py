@@ -73,7 +73,9 @@ def extension_allowed(filename):
         raise IllegalFileExtension(
             gettext("No file extension found in filename. That's not okay!")
         )
-    if not extension.lower() in map(lambda x: x.lower(), settings.FILE_EXTENSIONS):
+    if extension.lower() not in map(
+        lambda x: x.lower(), settings.FILE_EXTENSIONS
+    ):
         raise IllegalFileExtension(
             gettext(
                 "The following filename is illegal: {filename:s}. Extension "
@@ -90,7 +92,7 @@ def upload_path(instance, filename):
     # Has to match original extension filename
     if instance.id and instance.attachment and instance.attachment.original_filename:
         original_extension = instance.attachment.original_filename.split(".")[-1]
-        if not extension.lower() == original_extension:
+        if extension.lower() != original_extension:
             raise IllegalFileExtension(
                 "File extension has to be '%s', not '%s'."
                 % (original_extension, extension.lower())

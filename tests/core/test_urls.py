@@ -9,24 +9,22 @@ from ..base import wiki_override_settings
 
 class WikiCustomUrlPatterns(WikiURLPatterns):
     def get_article_urls(self):
-        urlpatterns = [
+        return [
             re_path(
                 "^some-prefix/(?P<article_id>[0-9]+)/$",
                 self.article_view_class.as_view(),
                 name="get",
             ),
         ]
-        return urlpatterns
 
     def get_article_path_urls(self):
-        urlpatterns = [
+        return [
             re_path(
                 "^some-other-prefix/(?P<path>.+/|)$",
                 self.article_view_class.as_view(),
                 name="get",
             ),
         ]
-        return urlpatterns
 
 
 urlpatterns = [

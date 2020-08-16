@@ -14,24 +14,22 @@ Group = apps.get_model(settings.GROUP_MODEL)
 
 class WikiCustomUrlPatterns(WikiURLPatterns):
     def get_article_urls(self):
-        urlpatterns = [
+        return [
             re_path(
                 "^my-wiki/(?P<article_id>[0-9]+)/$",
                 self.article_view_class.as_view(),
                 name="get",
             ),
         ]
-        return urlpatterns
 
     def get_article_path_urls(self):
-        urlpatterns = [
+        return [
             re_path(
                 "^my-wiki/(?P<path>.+/|)$",
                 self.article_view_class.as_view(),
                 name="get",
             ),
         ]
-        return urlpatterns
 
 
 class ArticleModelTest(TestCase):
